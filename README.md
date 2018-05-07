@@ -1,10 +1,4 @@
-<p align="center">
-    <a href="https://bitbucket.org/account/user/gotamedia/projects/ATOM">
-        <img src="https://i.imgur.com/H1GEHCY.png" height="102">
-    </a>
-</p>
-
-# atoms/http
+![atoms/http](https://i.imgur.com/H1GEHCY.png)
 
 A small but capable implementation of the [PSR-7](https://www.php-fig.org/psr/psr-7/) standard.
 
