@@ -1,6 +1,6 @@
 <?php
 
-namespace Atom\Http;
+namespace Atoms\Http;
 
 use Psr\Http\Message\UriInterface;
 

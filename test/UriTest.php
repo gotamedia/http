@@ -5,9 +5,9 @@
  * @license   https://github.com/zendframework/zend-diactoros/blob/master/LICENSE.md New BSD License
  */
 
-namespace Atom\Http;
+namespace Atoms\Http;
 
-use Atom\Http\Uri;
+use Atoms\Http\Uri;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 

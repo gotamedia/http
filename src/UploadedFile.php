@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Atom\Http;
+namespace Atoms\Http;
 
 use InvalidArgumentException;
 use Psr\Http\Message\UploadedFileInterface;

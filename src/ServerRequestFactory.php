@@ -1,6 +1,6 @@
 <?php
 
-namespace Atom\Http;
+namespace Atoms\Http;
 
 use InvalidArgumentException;
 use Psr\Http\Message\ServerRequestInterface;
@@ -107,7 +107,7 @@ class ServerRequestFactory
      * Returns an array with UploadedFile instances.
      *
      * @param  array $files
-     * @return \Atom\Http\UploadedFile[]
+     * @return \Atoms\Http\UploadedFile[]
      * @throws \InvalidArgumentException
      */
     private static function normalizeFiles(array $files): array
@@ -136,7 +136,7 @@ class ServerRequestFactory
      * delegate to normalizeNestedFileSpec() and return that value.
      *
      * @param  array $specification
-     * @return \Atom\Http\UploadedFile|array
+     * @return \Atoms\Http\UploadedFile|array
      */
     private static function createUploadedFileFromSpec(array $specification)
     {
@@ -160,7 +160,7 @@ class ServerRequestFactory
      * UploadedFileInterface instances.
      *
      * @param  array $files
-     * @return \Atom\Http\UploadedFile[]
+     * @return \Atoms\Http\UploadedFile[]
      */
     private static function normalizeNestedFileSpec(array $files): array
     {

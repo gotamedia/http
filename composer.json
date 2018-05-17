@@ -1,5 +1,5 @@
 {
-    "name": "atom/http",
+    "name": "atoms/http",
     "description": "An implementation of PSR-7.",
     "homepage": "https://bitbucket.org/gotamedia/http",
     "type": "library",
@@ -16,7 +16,7 @@
     ],
     "autoload": {
         "psr-4": {
-            "Atom\\Http\\": "src"
+            "Atoms\\Http\\": "src"
         }
     },
     "require": {

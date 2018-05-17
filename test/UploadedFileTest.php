@@ -8,11 +8,11 @@ declare(strict_types=1);
  * @license   https://github.com/zendframework/zend-diactoros/blob/master/LICENSE.md New BSD License
  */
 
-namespace Atom\Http;
+namespace Atoms\Http;
 
-use Atom\Http\Stream;
-use Atom\Http\StreamFactory;
-use Atom\Http\UploadedFile;
+use Atoms\Http\Stream;
+use Atoms\Http\StreamFactory;
+use Atoms\Http\UploadedFile;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use ReflectionProperty;

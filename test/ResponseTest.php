@@ -8,10 +8,10 @@ declare(strict_types=1);
  * @license   https://github.com/zendframework/zend-diactoros/blob/master/LICENSE.md New BSD License
  */
 
-namespace Atom\Http;
+namespace Atoms\Http;
 
-use Atom\Http\Response;
-use Atom\Http\Stream;
+use Atoms\Http\Response;
+use Atoms\Http\Stream;
 use DOMDocument;
 use DOMXPath;
 use InvalidArgumentException;

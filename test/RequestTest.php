@@ -8,11 +8,11 @@ declare(strict_types=1);
  * @license   https://github.com/zendframework/zend-diactoros/blob/master/LICENSE.md New BSD License
  */
 
-namespace Atom\Http;
+namespace Atoms\Http;
 
-use Atom\Http\Request;
-use Atom\Http\Stream;
-use Atom\Http\Uri;
+use Atoms\Http\Request;
+use Atoms\Http\Stream;
+use Atoms\Http\Uri;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\UriInterface;
