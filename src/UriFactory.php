@@ -5,16 +5,25 @@ declare(strict_types=1);
 namespace Atoms\Http;
 
 use Psr\Http\Message\UriInterface;
+use Psr\Http\Message\UriFactoryInterface;
 
-class UriFactory
+class UriFactory implements UriFactoryInterface
 {
+    /**
+     * {@inheritDoc}
+     */
+    public function createUri(string $uri = ''): UriInterface
+    {
+        return new Uri($uri);
+    }
+
     /**
      * Creates a new URI from the server global.
      *
      * @param  array $server
      * @return \Psr\Http\Message\UriInterface
      */
-    public static function createUriFromArray(array $server): UriInterface
+    public function createUriFromArray(array $server): UriInterface
     {
         $uri = new Uri();
 

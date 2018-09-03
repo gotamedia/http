@@ -5,19 +5,15 @@ declare(strict_types=1);
 namespace Atoms\Http;
 
 use InvalidArgumentException;
+use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Http\Message\StreamInterface;
 
-class StreamFactory
+class StreamFactory implements StreamFactoryInterface
 {
     /**
-     * Create a new stream from a string.
-     *
-     * The stream SHOULD be created with a temporary resource.
-     *
-     * @param  string $content
-     * @return \Psr\Http\Message\StreamInterface
+     * {@inheritDoc}
      */
-    public static function createStream($content = ''): StreamInterface
+    public function createStream(string $content = ''): StreamInterface
     {
         $resource = fopen('php://temp', 'r+');
 
@@ -28,18 +24,9 @@ class StreamFactory
     }
 
     /**
-     * Create a stream from an existing file.
-     *
-     * The file MUST be opened using the given mode, which may be any mode
-     * supported by the `fopen` function.
-     *
-     * The `$filename` MAY be any string supported by `fopen()`.
-     *
-     * @param  string $filename
-     * @param  string $mode
-     * @return \Psr\Http\Message\StreamInterface
+     * {@inheritDoc}
      */
-    public static function createStreamFromFile($filename, $mode = 'r'): StreamInterface
+    public function createStreamFromFile(string $filename, string $mode = 'r'): StreamInterface
     {
         if (($resource = @fopen($filename, $mode)) === false) {
             throw new InvalidArgumentException('Invalid file; could not open ' . $filename);
@@ -49,14 +36,9 @@ class StreamFactory
     }
 
     /**
-     * Create a new stream from an existing resource.
-     *
-     * The stream MUST be readable and may be writable.
-     *
-     * @param  resource $resource
-     * @return \Psr\Http\Message\StreamInterface
+     * {@inheritDoc}
      */
-    public static function createStreamFromResource($resource): StreamInterface
+    public function createStreamFromResource($resource): StreamInterface
     {
         if (!is_resource($resource)) {
             throw new InvalidArgumentException('Invalid resource; must be a valid resource');

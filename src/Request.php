@@ -185,11 +185,8 @@ class Request extends Message implements RequestInterface
             throw new InvalidArgumentException('Invalid method; must be a string');
         }
 
-        if (! preg_match('/^[!#$%&\'*+.^_`\|~0-9a-z-]+$/i', $method)) {
-            throw new InvalidArgumentException(sprintf(
-                'Unsupported HTTP method "%s" provided',
-                $method
-            ));
+        if (!preg_match('/^[!#$%&\'*+.^_`\|~0-9a-z-]+$/i', $method)) {
+            throw new InvalidArgumentException("Invalid method; {$method} is unsupported");
         }
     }
 }

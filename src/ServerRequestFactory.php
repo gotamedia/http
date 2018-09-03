@@ -5,20 +5,17 @@ declare(strict_types=1);
 namespace Atoms\Http;
 
 use InvalidArgumentException;
+use Psr\Http\Message\ServerRequestFactoryInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UploadedFileInterface;
 use Psr\Http\Message\UriInterface;
 
-class ServerRequestFactory
+class ServerRequestFactory implements ServerRequestFactoryInterface
 {
     /**
-     * Creates a new server request.
-     *
-     * @param  string $method
-     * @param  \Psr\Http\Message\UriInterface|string $uri
-     * @return \Psr\Http\Message\ServerRequestInterface
+     * {@inheritDoc}
      */
-    public static function createServerRequest($method, $uri): ServerRequestInterface
+    public function createServerRequest(string $method, $uri, array $serverParams = []): ServerRequestInterface
     {
         if (!$uri instanceof UriInterface) {
             $uri = new Uri($uri);
@@ -34,7 +31,7 @@ class ServerRequestFactory
      * @return \Psr\Http\Message\ServerRequestInterface
      * @throws \InvalidArgumentException
      */
-    public static function createServerRequestFromArray(array $server): ServerRequestInterface
+    public function createServerRequestFromArray(array $server): ServerRequestInterface
     {
         $method = self::getMethod($server);
         $uri = UriFactory::createUriFromArray($server);
@@ -47,7 +44,7 @@ class ServerRequestFactory
      *
      * @return \Psr\Http\Message\ServerRequestInterface
      */
-    public static function createServerRequestFromGlobals(): ServerRequestInterface
+    public function createServerRequestFromGlobals(): ServerRequestInterface
     {
         $serverParams = $_SERVER;
         $cookieParams = $_COOKIE;

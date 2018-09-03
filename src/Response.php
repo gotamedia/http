@@ -70,7 +70,7 @@ class Response extends Message implements ResponseInterface
         422 => 'Unprocessable Entity',
         423 => 'Locked',
         424 => 'Failed Dependency',
-        425 => 'Unordered Collection',
+        425 => 'Too Early',
         426 => 'Upgrade Required',
         428 => 'Precondition Required',
         429 => 'Too Many Requests',
@@ -102,18 +102,19 @@ class Response extends Message implements ResponseInterface
     /**
      * Creates a new Response instance.
      *
-     * @param \Psr\Http\Message\StreamInterface $body
      * @param int $statusCode
+     * @param string $reasonPhrase
+     * @param \Psr\Http\Message\StreamInterface $body
      * @param array $headers
      * @param string $protocol
-     * @param string $reasonPhrase
+
      */
     public function __construct(
-        StreamInterface $body,
         int $statusCode = 200,
+        string $reasonPhrase = '',
+        StreamInterface $body,
         array $headers = [],
-        string $protocol = '1.1',
-        string $reasonPhrase = ''
+        string $protocol = '1.1'
     ) {
         parent::__construct($body, $headers, $protocol);
 
