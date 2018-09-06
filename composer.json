@@ -1,6 +1,6 @@
 {
     "name": "atoms/http",
-    "description": "An implementation of PSR-7.",
+    "description": "Implementations of PSR-7 and PSR-17.",
     "homepage": "https://bitbucket.org/gotamedia/http",
     "type": "library",
     "license": "MIT",
@@ -21,10 +21,7 @@
     },
     "require": {
         "php": ">=7.1.0",
-        "psr/http-factory": "~1.0.0",
-        "psr/http-message": "~1.0.0",
-        "psr/http-server-handler": "~1.0.0",
-        "psr/http-server-middleware": "~1.0.0"
+        "psr/http-message": "~1.0.0"
     },
     "require-dev": {
         "phpunit/phpunit": "6.2.1",
