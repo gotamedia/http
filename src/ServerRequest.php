@@ -60,13 +60,13 @@ class ServerRequest extends Request implements ServerRequestInterface
         string $method,
         UriInterface $uri,
         StreamInterface $body,
-        array $headers = [],
-        string $protocol = '1.1',
-        array $serverParams = [],
-        array $cookieParams = [],
-        array $queryParams = [],
-        array $uploadedFiles = [],
-        $parsedBody = null
+        array $headers,
+        string $protocol,
+        array $serverParams,
+        array $cookieParams,
+        array $queryParams,
+        array $uploadedFiles,
+        $parsedBody
     ) {
         parent::__construct($body, $uri, $method, $headers, $protocol);
 

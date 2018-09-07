@@ -110,11 +110,11 @@ class Response extends Message implements ResponseInterface
 
      */
     public function __construct(
-        int $statusCode = 200,
-        string $reasonPhrase = '',
+        int $statusCode,
+        string $reasonPhrase,
         StreamInterface $body,
-        array $headers = [],
-        string $protocol = '1.1'
+        array $headers,
+        string $protocol
     ) {
         parent::__construct($body, $headers, $protocol);
 

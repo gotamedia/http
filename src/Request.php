@@ -29,18 +29,18 @@ class Request extends Message implements RequestInterface
     /**
      * Creates a new Request instance.
      *
-     * @param \Psr\Http\Message\StreamInterface $body
-     * @param \Psr\Http\Message\UriInterface $uri
      * @param string $method
+     * @param \Psr\Http\Message\UriInterface $uri
+     * @param \Psr\Http\Message\StreamInterface $body
      * @param array $headers
      * @param string $protocol
      */
     public function __construct(
-        StreamInterface $body,
+        string $method,
         UriInterface $uri,
-        string $method = '',
-        array $headers = [],
-        string $protocol = '1.1'
+        StreamInterface $body,
+        array $headers,
+        string $protocol
     ) {
         parent::__construct($body, $headers, $protocol);
 
