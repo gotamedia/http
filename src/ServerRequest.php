@@ -68,7 +68,7 @@ class ServerRequest extends Request implements ServerRequestInterface
         array $uploadedFiles,
         $parsedBody
     ) {
-        parent::__construct($body, $uri, $method, $headers, $protocol);
+        parent::__construct($method, $uri, $body, $headers, $protocol);
 
         $this->validateUploadedFiles($uploadedFiles);
 
