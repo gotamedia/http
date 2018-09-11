@@ -26,7 +26,7 @@ class RequestTest extends TestCase
 
     public function setUp()
     {
-        $this->request = new Request(new Stream(fopen('php://temp', 'r+')), new Uri());
+        $this->request = new Request('', new Uri(), new Stream(fopen('php://temp', 'r+')), [], '');
     }
 
     public function testMethodIsEmptyByDefault()
@@ -80,10 +80,11 @@ class RequestTest extends TestCase
             'x-foo' => ['bar'],
         ];
         $request = new Request(
-            $body,
-            $uri,
             'POST',
-            $headers
+            $uri,
+            $body,
+            $headers,
+            ''
         );
 
         $this->assertSame($uri, $request->getUri());
@@ -98,7 +99,13 @@ class RequestTest extends TestCase
 
     public function testDefaultStreamIsWritable()
     {
-        $request = new Request(new Stream(fopen('php://temp', 'r+')), new Uri());
+        $request = new Request(
+            'GET',
+            new Uri(),
+            new Stream(fopen('php://temp', 'r+')),
+            [],
+            ''
+        );
         $request->getBody()->write("test");
 
         $this->assertSame("test", (string)$request->getBody());
@@ -148,7 +155,7 @@ class RequestTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         //$this->expectExceptionMessage('Unsupported HTTP method');
 
-        new Request(new Stream(fopen('php://temp', 'r+')), new Uri(), $method);
+        new Request($method, new Uri(), new Stream(fopen('php://temp', 'r+')), [], '');
     }
 
     public function customRequestMethods()
@@ -175,7 +182,7 @@ class RequestTest extends TestCase
      */
     public function testAllowsCustomRequestMethodsThatFollowSpec($method)
     {
-        $request = new Request(new Stream(fopen('php://temp', 'r+')), new Uri(), $method);
+        $request = new Request($method, new Uri(), new Stream(fopen('php://temp', 'r+')), [], '');
         $this->assertSame($method, $request->getMethod());
     }
 
@@ -199,7 +206,7 @@ class RequestTest extends TestCase
     //     $this->expectException(InvalidArgumentException::class);
     //     $this->expectExceptionMessage('stream');
     //
-    //     new Request(new Stream(fopen('php://temp', 'r+')), new Uri(), $body);
+    //     new Request('GET', new Uri(), new Stream(fopen('php://temp', 'r+')), $body);
     // }
 
     public function invalidHeaderTypes()
@@ -222,18 +229,18 @@ class RequestTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         //$this->expectExceptionMessage($contains);
 
-        new Request(new Stream(fopen('php://memory', 'r+')), new Uri(), '', $headers);
+        new Request('GET', new Uri(), new Stream(fopen('php://memory', 'r+')), $headers, '');
     }
 
     public function testRequestTargetIsSlashWhenNoUriPresent()
     {
-        $request = new Request(new Stream(fopen('php://temp', 'r+')), new Uri());
+        $request = new Request('GET', new Uri(), new Stream(fopen('php://temp', 'r+')), [], '');
         $this->assertSame('/', $request->getRequestTarget());
     }
 
     public function testRequestTargetIsSlashWhenUriHasNoPathOrQuery()
     {
-        $request = (new Request(new Stream(fopen('php://temp', 'r+')), new Uri()))
+        $request = (new Request('GET', new Uri(), new Stream(fopen('php://temp', 'r+')), [], ''))
             ->withUri(new Uri('http://example.com'));
         $this->assertSame('/', $request->getRequestTarget());
     }
@@ -242,25 +249,25 @@ class RequestTest extends TestCase
     {
         return [
             'absolute-uri' => [
-                (new Request(new Stream(fopen('php://temp', 'r+')), new Uri()))
+                (new Request('GET', new Uri(), new Stream(fopen('php://temp', 'r+')), [], ''))
                 ->withUri(new Uri('https://api.example.com/user'))
                 ->withMethod('POST'),
                 '/user'
             ],
             'absolute-uri-with-query' => [
-                (new Request(new Stream(fopen('php://temp', 'r+')), new Uri()))
+                (new Request('GET', new Uri(), new Stream(fopen('php://temp', 'r+')), [], ''))
                 ->withUri(new Uri('https://api.example.com/user?foo=bar'))
                 ->withMethod('POST'),
                 '/user?foo=bar'
             ],
             'relative-uri' => [
-                (new Request(new Stream(fopen('php://temp', 'r+')), new Uri()))
+                (new Request('GET', new Uri(), new Stream(fopen('php://temp', 'r+')), [], ''))
                 ->withUri(new Uri('/user'))
                 ->withMethod('GET'),
                 '/user'
             ],
             'relative-uri-with-query' => [
-                (new Request(new Stream(fopen('php://temp', 'r+')), new Uri()))
+                (new Request('GET', new Uri(), new Stream(fopen('php://temp', 'r+')), [], ''))
                 ->withUri(new Uri('/user?foo=bar'))
                 ->withMethod('GET'),
                 '/user?foo=bar'
@@ -293,13 +300,20 @@ class RequestTest extends TestCase
      */
     public function testCanProvideARequestTarget($requestTarget)
     {
-        $request = (new Request(new Stream(fopen('php://temp', 'r+')), new Uri()))->withRequestTarget($requestTarget);
+        $request = (new Request('GET', new Uri(), new Stream(fopen('php://temp', 'r+')), [], ''))
+            ->withRequestTarget($requestTarget);
         $this->assertSame($requestTarget, $request->getRequestTarget());
     }
 
     public function testRequestTargetCannotContainWhitespace()
     {
-        $request = new Request(new Stream(fopen('php://temp', 'r+')), new Uri());
+        $request = new Request(
+            'GET',
+            new Uri(),
+            new Stream(fopen('php://temp', 'r+')),
+            [],
+            ''
+        );
 
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Invalid request target');
@@ -309,7 +323,8 @@ class RequestTest extends TestCase
 
     public function testRequestTargetDoesNotCacheBetweenInstances()
     {
-        $request = (new Request(new Stream(fopen('php://temp', 'r+')), new Uri()))->withUri(new Uri('https://example.com/foo/bar'));
+        $request = (new Request('GET', new Uri(), new Stream(fopen('php://temp', 'r+')), [], ''))
+            ->withUri(new Uri('https://example.com/foo/bar'));
         $original = $request->getRequestTarget();
         $newRequest = $request->withUri(new Uri('http://mwop.net/bar/baz'));
         $this->assertNotSame($original, $newRequest->getRequestTarget());
@@ -317,7 +332,8 @@ class RequestTest extends TestCase
 
     public function testSettingNewUriResetsRequestTarget()
     {
-        $request = (new Request(new Stream(fopen('php://temp', 'r+')), new Uri()))->withUri(new Uri('https://example.com/foo/bar'));
+        $request = (new Request('GET', new Uri(), new Stream(fopen('php://temp', 'r+')), [], ''))
+            ->withUri(new Uri('https://example.com/foo/bar'));
         $newRequest = $request->withUri(new Uri('http://mwop.net/bar/baz'));
 
         $this->assertNotSame($request->getRequestTarget(), $newRequest->getRequestTarget());
@@ -328,7 +344,13 @@ class RequestTest extends TestCase
      */
     public function testGetHeadersContainsHostHeaderIfUriWithHostIsPresent()
     {
-        $request = new Request(new Stream(fopen('php://temp', 'r+')), new Uri('http://example.com'));
+        $request = new Request(
+            'GET',
+            new Uri('http://example.com'),
+            new Stream(fopen('php://temp', 'r+')),
+            [],
+            ''
+        );
         $headers = $request->getHeaders();
         $this->assertArrayHasKey('Host', $headers);
         $this->assertContains('example.com', $headers['Host']);
@@ -350,7 +372,13 @@ class RequestTest extends TestCase
      */
     public function testGetHeadersContainsNoHostHeaderIfNoUriPresent()
     {
-        $request = new Request(new Stream(fopen('php://temp', 'r+')), new Uri());
+        $request = new Request(
+            'GET',
+            new Uri(),
+            new Stream(fopen('php://temp', 'r+')),
+            [],
+            ''
+        );
         $headers = $request->getHeaders();
         $this->assertArrayNotHasKey('Host', $headers);
     }
@@ -360,7 +388,13 @@ class RequestTest extends TestCase
      */
     public function testGetHeadersContainsNoHostHeaderIfUriDoesNotContainHost()
     {
-        $request = new Request(new Stream(fopen('php://temp', 'r+')), new Uri());
+        $request = new Request(
+            'GET',
+            new Uri(),
+            new Stream(fopen('php://temp', 'r+')),
+            [],
+            ''
+        );
         $headers = $request->getHeaders();
         $this->assertArrayNotHasKey('Host', $headers);
     }
@@ -370,7 +404,13 @@ class RequestTest extends TestCase
      */
     public function testGetHostHeaderReturnsUriHostWhenPresent()
     {
-        $request = new Request(new Stream(fopen('php://temp', 'r+')), new Uri('http://example.com'));
+        $request = new Request(
+            'GET',
+            new Uri('http://example.com'),
+            new Stream(fopen('php://temp', 'r+')),
+            [],
+            ''
+        );
         $header = $request->getHeader('host');
         $this->assertSame(['example.com'], $header);
     }
@@ -391,7 +431,13 @@ class RequestTest extends TestCase
      */
     public function testGetHostHeaderReturnsEmptyArrayIfNoUriPresent()
     {
-        $request = new Request(new Stream(fopen('php://temp', 'r+')), new Uri());
+        $request = new Request(
+            'GET',
+            new Uri(),
+            new Stream(fopen('php://temp', 'r+')),
+            [],
+            ''
+        );
         $this->assertSame([], $request->getHeader('host'));
     }
 
@@ -400,7 +446,13 @@ class RequestTest extends TestCase
      */
     public function testGetHostHeaderReturnsEmptyArrayIfUriDoesNotContainHost()
     {
-        $request = new Request(new Stream(fopen('php://temp', 'r+')), new Uri());
+        $request = new Request(
+            'GET',
+            new Uri(),
+            new Stream(fopen('php://temp', 'r+')),
+            [],
+            ''
+        );
         $this->assertSame([], $request->getHeader('host'));
     }
 
@@ -409,7 +461,13 @@ class RequestTest extends TestCase
      */
     public function testGetHostHeaderLineReturnsUriHostWhenPresent()
     {
-        $request = new Request(new Stream(fopen('php://temp', 'r+')), new Uri('http://example.com'));
+        $request = new Request(
+            'GET',
+            new Uri('http://example.com'),
+            new Stream(fopen('php://temp', 'r+')),
+            [],
+            ''
+        );
         $header = $request->getHeaderLine('host');
         $this->assertContains('example.com', $header);
     }
@@ -419,7 +477,13 @@ class RequestTest extends TestCase
      */
     public function testGetHostHeaderLineReturnsEmptyStringIfNoUriPresent()
     {
-        $request = new Request(new Stream(fopen('php://temp', 'r+')), new Uri());
+        $request = new Request(
+            'GET',
+            new Uri(),
+            new Stream(fopen('php://temp', 'r+')),
+            [],
+            ''
+        );
         $this->assertEmpty($request->getHeaderLine('host'));
     }
 
@@ -428,26 +492,44 @@ class RequestTest extends TestCase
      */
     public function testGetHostHeaderLineReturnsEmptyStringIfUriDoesNotContainHost()
     {
-        $request = new Request(new Stream(fopen('php://temp', 'r+')), new Uri());
+        $request = new Request(
+            'GET',
+            new Uri(),
+            new Stream(fopen('php://temp', 'r+')),
+            [],
+            ''
+        );
         $this->assertEmpty($request->getHeaderLine('host'));
     }
 
     public function testHostHeaderSetFromUriOnCreationIfNoHostHeaderSpecified()
     {
-        $request = new Request(new Stream(fopen('php://temp', 'r+')), new Uri('http://www.example.com'));
+        $request = new Request(
+            'GET',
+            new Uri('http://www.example.com'),
+            new Stream(fopen('php://temp', 'r+')),
+            [],
+            ''
+        );
         $this->assertTrue($request->hasHeader('Host'));
         $this->assertSame('www.example.com', $request->getHeaderLine('host'));
     }
 
     public function testHostHeaderNotSetFromUriOnCreationIfHostHeaderSpecified()
     {
-        $request = new Request(new Stream(fopen('php://memory', 'r+')), new Uri('http://www.example.com'), '', ['Host' => 'www.test.com']);
+        $request = new Request(
+            'GET',
+            new Uri('http://www.example.com'),
+            new Stream(fopen('php://memory', 'r+')),
+            ['Host' => 'www.test.com'],
+            ''
+        );
         $this->assertSame('www.test.com', $request->getHeaderLine('host'));
     }
 
     public function testPassingPreserveHostFlagWhenUpdatingUriDoesNotUpdateHostHeader()
     {
-        $request = (new Request(new Stream(fopen('php://temp', 'r+')), new Uri()))
+        $request = (new Request('GET', new Uri(), new Stream(fopen('php://temp', 'r+')), [], ''))
             ->withAddedHeader('Host', 'example.com');
 
         $uri = (new Uri())->withHost('www.example.com');
@@ -458,7 +540,7 @@ class RequestTest extends TestCase
 
     public function testNotPassingPreserveHostFlagWhenUpdatingUriWithoutHostDoesNotUpdateHostHeader()
     {
-        $request = (new Request(new Stream(fopen('php://temp', 'r+')), new Uri()))
+        $request = (new Request('GET', new Uri(), new Stream(fopen('php://temp', 'r+')), [], ''))
             ->withAddedHeader('Host', 'example.com');
 
         $uri = new Uri();
@@ -469,7 +551,7 @@ class RequestTest extends TestCase
 
     public function testHostHeaderUpdatesToUriHostAndPortWhenPreserveHostDisabledAndNonStandardPort()
     {
-        $request = (new Request(new Stream(fopen('php://temp', 'r+')), new Uri()))
+        $request = (new Request('GET', new Uri(), new Stream(fopen('php://temp', 'r+')), [], ''))
             ->withAddedHeader('Host', 'example.com');
 
         $uri = (new Uri())
@@ -506,7 +588,7 @@ class RequestTest extends TestCase
     {
         $this->expectException(InvalidArgumentException::class);
 
-        new Request(new Stream(fopen('php://temp', 'r+')), new Uri(), '', [$name => $value]);
+        new Request('GET', new Uri(), new Stream(fopen('php://temp', 'r+')), [$name => $value], '');
     }
 
     public function hostHeaderKeys()
@@ -537,7 +619,7 @@ class RequestTest extends TestCase
      */
     public function testWithUriAndNoPreserveHostWillOverwriteHostHeaderRegardlessOfOriginalCase($hostKey)
     {
-        $request = (new Request(new Stream(fopen('php://temp', 'r+')), new Uri()))
+        $request = (new Request('GET', new Uri(), new Stream(fopen('php://temp', 'r+')), [], ''))
             ->withHeader($hostKey, 'example.com');
 
         $uri  = new Uri('http://example.org/foo/bar');

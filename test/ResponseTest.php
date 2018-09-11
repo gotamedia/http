@@ -26,7 +26,7 @@ class ResponseTest extends TestCase
 
     public function setUp()
     {
-        $this->response = new Response(200, '', new Stream(fopen('php://temp', 'r+')));
+        $this->response = new Response(200, '', new Stream(fopen('php://temp', 'r+')), [], '');
     }
 
     public function testStatusCodeIs200ByDefault()
@@ -125,7 +125,7 @@ class ResponseTest extends TestCase
             'location' => [ 'http://example.com/' ],
         ];
 
-        $response = new Response($status, '', $body, $headers);
+        $response = new Response($status, '', $body, $headers, '');
         $this->assertSame($body, $response->getBody());
         $this->assertSame(302, $response->getStatusCode());
         $this->assertSame($headers, $response->getHeaders());
@@ -158,7 +158,7 @@ class ResponseTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Invalid status code');
 
-        new Response($code, '', new Stream(fopen('php://memory', 'r+')));
+        new Response($code, '', new Stream(fopen('php://memory', 'r+')), [], '');
     }
 
     /**
@@ -206,7 +206,7 @@ class ResponseTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('stream');
 
-        new Response(200, '', $body);
+        new Response(200, '', $body, [], '');
     }
 
 
@@ -230,7 +230,7 @@ class ResponseTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage($contains);
 
-        new Response(200, '', new Stream(fopen('php://memory', 'r+')), $headers);
+        new Response(200, '', new Stream(fopen('php://memory', 'r+')), $headers, '');
     }
 
     // public function testInvalidStatusCodeInConstructor()
@@ -273,6 +273,6 @@ class ResponseTest extends TestCase
     {
         $this->expectException(InvalidArgumentException::class);
 
-        new Response(new Stream('php://memory'), 200, [$name => $value]);
+        new Response(new Stream('php://memory'), 200, [$name => $value], '');
     }
 }

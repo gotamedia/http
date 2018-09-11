@@ -198,7 +198,7 @@ class UploadedFileTest extends TestCase
 
     public function testMovesFileToDesignatedPath()
     {
-        $stream = StreamFactory::createStreamFromFile('php://temp', 'wb+');
+        $stream = new Stream(fopen('php://temp', 'wb+'));
         $stream->write('Foo bar!');
         $upload = new UploadedFile($stream, 0, UPLOAD_ERR_OK);
 
@@ -228,7 +228,7 @@ class UploadedFileTest extends TestCase
      */
     public function testMoveRaisesExceptionForInvalidPath($path)
     {
-        $stream = StreamFactory::createStreamFromFile('php://temp', 'wb+');
+        $stream = new Stream(fopen('php://temp', 'wb+'));
         $stream->write('Foo bar!');
         $upload = new UploadedFile($stream, 0, UPLOAD_ERR_OK);
 
@@ -242,7 +242,7 @@ class UploadedFileTest extends TestCase
 
     public function testMoveCannotBeCalledMoreThanOnce()
     {
-        $stream = StreamFactory::createStreamFromFile('php://temp', 'wb+');
+        $stream = new Stream(fopen('php://temp', 'wb+'));
         $stream->write('Foo bar!');
         $upload = new UploadedFile($stream, 0, UPLOAD_ERR_OK);
 
@@ -258,7 +258,7 @@ class UploadedFileTest extends TestCase
 
     public function testCannotRetrieveStreamAfterMove()
     {
-        $stream = StreamFactory::createStreamFromFile('php://temp', 'wb+');
+        $stream = new Stream(fopen('php://temp', 'wb+'));
         $stream->write('Foo bar!');
         $upload = new UploadedFile($stream, 0, UPLOAD_ERR_OK);
 

@@ -24,7 +24,18 @@ class ServerRequestTest extends TestCase
 
     public function setUp()
     {
-        $this->request = new ServerRequest('GET', new Uri(), new Stream(fopen('php://temp', 'r+')));
+        $this->request = new ServerRequest(
+            'GET',
+            new Uri(),
+            new Stream(fopen('php://temp', 'r+')),
+            [],
+            '',
+            [],
+            [],
+            [],
+            [],
+            null
+        );
     }
 
     public function testServerParamsAreEmptyByDefault()
@@ -180,7 +191,18 @@ class ServerRequestTest extends TestCase
      */
     public function testCookieParamsAreAnEmptyArrayAtInitialization()
     {
-        $request = new ServerRequest('GET', new Uri(), new Stream(fopen('php://memory', 'r+')));
+        $request = new ServerRequest(
+            'GET',
+            new Uri(),
+            new Stream(fopen('php://memory', 'r+')),
+            [],
+            '',
+            [],
+            [],
+            [],
+            [],
+            null
+        );
         $this->assertInternalType('array', $request->getCookieParams());
         $this->assertCount(0, $request->getCookieParams());
     }
@@ -190,7 +212,18 @@ class ServerRequestTest extends TestCase
      */
     public function testQueryParamsAreAnEmptyArrayAtInitialization()
     {
-        $request = new ServerRequest('GET', new Uri(), new Stream(fopen('php://memory', 'r+')));
+        $request = new ServerRequest(
+            'GET',
+            new Uri(),
+            new Stream(fopen('php://memory', 'r+')),
+            [],
+            '',
+            [],
+            [],
+            [],
+            [],
+            null
+        );
         $this->assertInternalType('array', $request->getQueryParams());
         $this->assertCount(0, $request->getQueryParams());
     }
@@ -200,13 +233,35 @@ class ServerRequestTest extends TestCase
      */
     public function testParsedBodyIsNullAtInitialization()
     {
-        $request = new ServerRequest('GET', new Uri(), new Stream(fopen('php://memory', 'r+')));
+        $request = new ServerRequest(
+            'GET',
+            new Uri(),
+            new Stream(fopen('php://memory', 'r+')),
+            [],
+            '',
+            [],
+            [],
+            [],
+            [],
+            null
+        );
         $this->assertNull($request->getParsedBody());
     }
 
     public function testAllowsRemovingAttributeWithNullValue()
     {
-        $request = new ServerRequest('GET', new Uri(), new Stream(fopen('php://memory', 'r+')));
+        $request = new ServerRequest(
+            'GET',
+            new Uri(),
+            new Stream(fopen('php://memory', 'r+')),
+            [],
+            '',
+            [],
+            [],
+            [],
+            [],
+            null
+        );
         $request = $request->withAttribute('boo', null);
         $request = $request->withoutAttribute('boo');
         $this->assertSame([], $request->getAttributes());
@@ -214,14 +269,36 @@ class ServerRequestTest extends TestCase
 
     public function testAllowsRemovingNonExistentAttribute()
     {
-        $request = new ServerRequest('GET', new Uri(), new Stream(fopen('php://memory', 'r+')));
+        $request = new ServerRequest(
+            'GET',
+            new Uri(),
+            new Stream(fopen('php://memory', 'r+')),
+            [],
+            '',
+            [],
+            [],
+            [],
+            [],
+            null
+        );
         $request = $request->withoutAttribute('boo');
         $this->assertSame([], $request->getAttributes());
     }
 
     public function testTryToAddInvalidUploadedFiles()
     {
-        $request = new ServerRequest('GET', new Uri(), new Stream(fopen('php://memory', 'r+')));
+        $request = new ServerRequest(
+            'GET',
+            new Uri(),
+            new Stream(fopen('php://memory', 'r+')),
+            [],
+            '',
+            [],
+            [],
+            [],
+            [],
+            null
+        );
 
         $this->expectException(InvalidArgumentException::class);
 
