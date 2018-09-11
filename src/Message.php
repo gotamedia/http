@@ -300,7 +300,7 @@ class Message implements MessageInterface
          * \r not followed by \n, OR
          * \r\n not followed by space or horizontal tab; these are all CRLF attacks
          */
-        if (preg_match("#(?:(?:(?<!\r)\n)|(?:\r(?!\n))|(?:\r\n(?![ \t])))#", $value)) {
+        if (preg_match("#(?:(?:(?<!\r)\n)|(?:\r(?!\n))|(?:\r\n(?![ \t])))#", (string)$value)) {
             throw new InvalidArgumentException('Invalid header value; contains illegal characters');
         }
 
@@ -313,7 +313,7 @@ class Message implements MessageInterface
          * 127 === DEL (disallowed)
          * 255 === null byte (disallowed)
          */
-        if (preg_match('/[^\x09\x0a\x0d\x20-\x7E\x80-\xFE]/', $value)) {
+        if (preg_match('/[^\x09\x0a\x0d\x20-\x7E\x80-\xFE]/', (string)$value)) {
             throw new InvalidArgumentException('Invalid header value; contains illegal characters');
         }
     }
