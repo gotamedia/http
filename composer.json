@@ -1,6 +1,6 @@
 {
     "name": "atoms/http",
-    "description": "Implementations of PSR-7 and PSR-17.",
+    "description": "Implementations of PSR-7.",
     "homepage": "https://bitbucket.org/gotamedia/http",
     "type": "library",
     "license": "MIT",
@@ -16,7 +16,7 @@
     ],
     "autoload": {
         "psr-4": {
-            "Atoms\\Http\\": "src"
+            "Atoms\\Http\\": "src/"
         }
     },
     "require": {
