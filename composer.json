@@ -1,7 +1,7 @@
 {
     "name": "atoms/http",
     "description": "Implementations of PSR-7.",
-    "homepage": "https://bitbucket.org/gotamedia/http",
+    "homepage": "https://github.com/gotamedia/http",
     "type": "library",
     "license": "MIT",
     "authors": [
